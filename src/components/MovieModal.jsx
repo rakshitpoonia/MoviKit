@@ -175,21 +175,13 @@ const MovieModal = ({ movieId, onClose }) => {
                 className="w-full rounded-xl"
                 
               />
-              {/* Purple glow effect behind poster */}
-              <div 
-                className="absolute inset-0 rounded-xl blur-xl opacity-30 -z-10"
-                style={{
-                  background: 'linear-gradient(45deg, rgba(147, 51, 234, 0.6), rgba(168, 85, 247, 0.4))',
-                  transform: 'scale(1.05)'
-                }}
-              ></div>
             </div>
             
             {/* Trailer Button */}
             {getTrailerUrl() && (
               <button
                 onClick={() => window.open(getTrailerUrl(), '_blank')}
-                 className="w-full mt-4 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 text-base font-medium shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white/40 bg-white/30"
+                 className="w-full mt-4 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 text-base font-medium shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-[1.02] cursor-pointer hover:bg-white/40 bg-white/30"
               >
                 ▶ Watch Trailer
               </button>
@@ -281,7 +273,7 @@ const MovieModal = ({ movieId, onClose }) => {
               <div className="flex-1">
                 <p className="text-white text-base mt-1">
                   {movieDetails.spoken_languages?.length > 0
-                    ? movieDetails.spoken_languages.map(lang => lang.english_name).join(' • ')
+                    ? movieDetails.spoken_languages.map(lang => lang.english_name).join(' , ')
                     : 'N/A'
                   }
                 </p>
@@ -296,7 +288,7 @@ const MovieModal = ({ movieId, onClose }) => {
                 </div>
                 <div className="flex-1">
                   <p className="text-white text-base mt-1">
-                    {movieDetails.production_companies.map(company => company.name).join(' • ')}
+                    {movieDetails.production_companies.map(company => company.name).join(' , ')}
                   </p>
                 </div>
               </div>

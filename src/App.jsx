@@ -99,6 +99,9 @@ const App = () => {
     loadTrendingMovies();
   }, []);
 
+  // Check if we're in search mode (searchTerm is not empty)
+  const isSearchMode = searchTerm.trim() !== "";
+
   return (
     <main>
       <div className="pattern" />
@@ -112,7 +115,8 @@ const App = () => {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
-        {trendingMovies.length > 0 && (
+        {/* Trending Section*/}
+        {!isSearchMode && trendingMovies.length > 0 && (
           <section className="trending">
             <h2 className="mt-6 text-4xl text-gradient">Trending Movies</h2>
             <ul>
@@ -132,7 +136,10 @@ const App = () => {
         )}
 
         <section className="all-movies">
-          <h2 className="mt-6 text-4xl text-gradient">Popular Movies</h2>
+          {/* Dynamic heading based on search mode */}
+          <h2 className="mt-6 text-4xl text-gradient">
+            {isSearchMode ? `Search: ${searchTerm}` : "Popular Movies"}
+          </h2>
 
           {isLoading ? (
             <div className="flex justify-center">
