@@ -36,11 +36,11 @@
   }
 
   main {
-    @apply min-h-screen relative bg-primary;
+    @apply min-h-screen relative;
   }
 
   header {
-    @apply sm:mt-10 mt-5;
+    @apply mt-0;
   }
 
   header img {
@@ -50,7 +50,9 @@
 
 @layer components {
   .pattern {
-    @apply bg-hero-pattern w-full h-screen bg-center bg-cover absolute z-0;
+    @apply bg-hero-pattern w-full h-screen bg-top bg-cover absolute z-0;
+    top: 0;
+    left: 0;
   }
 
   .wrapper {

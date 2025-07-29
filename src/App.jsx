@@ -3,6 +3,8 @@ import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import MovieModal from "./components/MovieModal";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import { useDebounce } from "react-use";
 import { updateSearchCount, getTrendingMovies } from "./appwrite";
 
@@ -102,18 +104,39 @@ const App = () => {
   // Check if we're in search mode (searchTerm is not empty)
   const isSearchMode = searchTerm.trim() !== "";
 
+  const handleHomeClick = () => {
+    setSearchTerm(""); // Clear search term to show homepage
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
+  };
+  
+  const handleConnectClick = () => {
+    // Scroll to footer smoothly
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <main>
+    <>
       <div className="pattern" />
+      <main>
+        <Header 
+          onHomeClick={handleHomeClick}
+          onConnectClick={handleConnectClick}
+        />
 
       <div className="wrapper">
-        <header>
-          <img src="./hero.png" alt="Hero Banner" />
+        <div className="text-center mt-10">
+          <img src="./hero.png" alt="Hero Banner" className="w-full max-w-lg h-auto object-contain mx-auto drop-shadow-md" />
           <h1>
             Find <span className="text-gradient">Movies</span> You'll Enjoy
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        </header>
+        </div>
 
         {/* Trending Section*/}
         {!isSearchMode && trendingMovies.length > 0 && (
@@ -162,14 +185,17 @@ const App = () => {
         </section>
       </div>
 
+      <Footer />
+
       {/* Movie Modal */}
       {selectedMovieId && (
         <MovieModal 
-          movieId={selectedMovieId} 
+          movieId={selectedMovieId}   
           onClose={handleCloseModal}
         />
       )}
-    </main>
+      </main>
+    </>
   );
 };
 
