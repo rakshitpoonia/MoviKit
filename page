@@ -1,0 +1,33 @@
+[33m0f07f4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Commit 2
+index.html
+src/App.jsx
+src/components/Footer.jsx
+src/components/Header.jsx
+src/index.css
+[33m8ae5fb9[m Minor Logic Flaws
+index.html
+public/logo.png
+src/App.jsx
+src/components/MovieModal.jsx
+[33m451b95f[m Commit 1
+.gitignore
+README.md
+eslint.config.js
+index.html
+package-lock.json
+package.json
+public/hero-bg.png
+public/hero.png
+public/no-movie.png
+public/search.svg
+public/star.svg
+src/App.jsx
+src/appwrite.js
+src/components/MovieCard.jsx
+src/components/MovieModal.jsx
+src/components/Search.jsx
+src/components/Spinner.jsx
+src/index.css
+src/main.jsx
+tailwind.config.js
+vite.config.js
