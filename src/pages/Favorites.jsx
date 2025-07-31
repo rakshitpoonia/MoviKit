@@ -32,7 +32,7 @@ const Favorites = () => {
           <div className="text-center mt-20">
             <div className="favorites-empty">
               <h2 className="text-4xl text-gradient mb-4">No favorite movies yet</h2>
-              <p className="text-light-100/70">Start adding movies to your favorites!</p>
+              <p className="text-light-100/70 text-lg">Start adding movies to your favorites!</p>
             </div>
           </div>
         </div>

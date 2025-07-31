@@ -171,6 +171,7 @@ const MovieModal = ({ movieId, onClose }) => {
                     ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
                     : './no-movie.png'
                 }
+                loading="lazy"
                 alt={movieDetails.title}
                 className="w-full rounded-xl"
                 

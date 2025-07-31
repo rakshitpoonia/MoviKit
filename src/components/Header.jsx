@@ -28,15 +28,15 @@ const Header = ({ onHomeClick, onConnectClick }) => {
               onClick={handleFavouritesClick}
               className="bg-light-100/5 hover:bg-light-100/10 cursor-pointer text-white px-3 xs:px-4 py-1 rounded-lg text-sm xs:text-base font-medium transition-all duration-200 hover:scale-105 border border-light-100/10 hover:border-light-100/20"
             >
-              Favourites
+              Favorites
             </button>
             
-            {/* Connect Button */}
+            {/* About Button */}
             <button 
               onClick={onConnectClick}
               className="bg-light-100/5 hover:bg-light-100/10 cursor-pointer text-white px-3 xs:px-4 py-1 rounded-lg text-sm xs:text-base font-medium transition-all duration-200 hover:scale-105 border border-light-100/10 hover:border-light-100/20"
             >
-              Connect
+              About
             </button>
           </div>
         </div>
