@@ -27,6 +27,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [isTrendingLoading, setIsTrendingLoading] = useState(true);
   const { openModal } = useModalContext();
 
   // Debounce the search term to prevent making too many API requests
@@ -72,11 +73,14 @@ const Home = () => {
   };
 
   const loadTrendingMovies = async () => {
+    setIsTrendingLoading(true);
     try {
       const movies = await getTrendingMovies();
       setTrendingMovies(movies);
     } catch (error) {
       console.error(`Error fetching trending movies: ${error}`);
+    } finally {
+      setIsTrendingLoading(false);
     }
   };
 
@@ -135,22 +139,28 @@ const Home = () => {
         </div>
 
         {/* Trending Section*/}
-        {!isSearchMode && trendingMovies.length > 0 && (
+        {!isSearchMode && (
           <section className="trending">
             <h2 className="mt-6 text-4xl text-gradient">Trending Movies</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img 
-                    src={movie.poster_url} 
-                    alt={movie.title}
-                    className="cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => handleTrendingMovieClick(movie)}
-                  />
-                </li>
-              ))}
-            </ul>
+            {isTrendingLoading ? (
+              <div className="flex justify-center">
+                <Spinner />
+              </div>
+            ) : trendingMovies.length > 0 ? (
+              <ul>
+                {trendingMovies.map((movie, index) => (
+                  <li key={movie.$id}>
+                    <p>{index + 1}</p>
+                    <img 
+                      src={movie.poster_url} 
+                      alt={movie.title}
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => handleTrendingMovieClick(movie)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </section>
         )}
 
