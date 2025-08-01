@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Search from "../components/Search";
 import Spinner from "../components/Spinner";
 import MovieCard from "../components/MovieCard";
-import MovieModal from "../components/MovieModal";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useDebounce } from "react-use";
 import { updateSearchCount, getTrendingMovies } from "../appwrite";
+import { useModalContext } from "../contexts/ModalContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -27,7 +27,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [trendingMovies, setTrendingMovies] = useState([]);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const { openModal } = useModalContext();
 
   // Debounce the search term to prevent making too many API requests
   // by waiting for the user to stop typing for 500ms
@@ -81,15 +81,11 @@ const Home = () => {
   };
 
   const handleMovieClick = (movieId) => {
-    setSelectedMovieId(movieId);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedMovieId(null);
+    openModal(movieId);
   };
 
   const handleTrendingMovieClick = (movie) => {
-    setSelectedMovieId(movie.movie_id);
+    openModal(movie.movie_id);
   };
 
   useEffect(() => {
@@ -186,14 +182,6 @@ const Home = () => {
       </div>
 
       <Footer />
-
-      {/* Movie Modal */}
-      {selectedMovieId && (
-        <MovieModal 
-          movieId={selectedMovieId}   
-          onClose={handleCloseModal}
-        />
-      )}
       </main>
     </>
   );

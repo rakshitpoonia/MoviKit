@@ -1,11 +1,15 @@
 import React from "react";
 import { useState } from "react";
+import { useMovieContext } from "../contexts/MovieContext";
 
 const MovieCard = React.memo(({
   movie: { id, title, vote_average, poster_path, release_date, genre_ids },
   genres,
   onClick
 }) => {
+  const { isFavorite, addToFavorite, removeFromFavorites } = useMovieContext();
+  const favorite = isFavorite(id);
+
   const getGenreNames = (ids) => {
     const firstGenre = ids
       .map((id) => genres.find((g) => g.id === id)?.name)
@@ -13,11 +17,10 @@ const MovieCard = React.memo(({
     return firstGenre || "Unknown";
   };
 
-  const [isFavorite, setIsFavorite] = useState(false);
-
   const handleButtonClick = (e) => {
     e.stopPropagation(); // Prevent card click when clicking button
-    setIsFavorite(!isFavorite);
+    if(favorite) removeFromFavorites(id);
+    else addToFavorite({ id, title, vote_average, poster_path, release_date, genre_ids });
   };
 
   return (
@@ -29,7 +32,7 @@ const MovieCard = React.memo(({
       </div>
       <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <button 
-          className={`text-xl p-2 bg-black/50 rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 hover:bg-black/80 hover:border-white border-2 border-transparent cursor-pointer ${isFavorite ? 'text-red-400' : 'text-white'}`}
+          className={`text-xl p-2 bg-black/50 rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 hover:bg-black/80 hover:border-white border-2 border-transparent cursor-pointer ${favorite ? 'text-red-400' : 'text-white'}`}
           onClick={handleButtonClick}
           title="Add to Favorites"
         >
