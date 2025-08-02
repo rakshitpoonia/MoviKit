@@ -64,8 +64,61 @@
   .trending {
     @apply mt-20;
 
+    & .trending-header {
+      @apply flex justify-between items-center;
+    }
+
+    & .trending-navigation {
+      @apply flex gap-2;
+      position: relative;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    & .nav-btn {
+      @apply w-10 h-10 rounded-full bg-light-100/20 text-white border-2 border-light-100/60 
+             hover:bg-light-100/30 hover:border-light-100/80 hover:scale-105 transition-all duration-200
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-light-100/20
+             disabled:hover:border-light-100/60 disabled:hover:scale-100 flex items-center justify-center text-lg font-bold cursor-pointer;
+      box-shadow: 0 2px 8px rgba(206, 206, 251, 0.2);
+      position: relative;
+      z-index: 10;
+      pointer-events: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    & .nav-btn:hover {
+      background-color: rgba(206, 206, 251, 0.3) !important;
+      border-color: rgba(206, 206, 251, 0.8) !important;
+      transform: scale(1.05) !important;
+    }
+
+    & .nav-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    & .nav-btn:focus {
+      outline: 2px solid rgba(206, 206, 251, 0.8);
+      outline-offset: 2px;
+    }
+
+    & .nav-btn:focus-visible {
+      outline: 2px solid rgba(206, 206, 251, 0.8);
+      outline-offset: 2px;
+    }
+
     & ul {
-      @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
+      @apply flex flex-row overflow-x-auto gap-5 -mt-10 w-full hide-scrollbar;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    & ul::-webkit-scrollbar {
+      display: none;
     }
 
     & ul li {

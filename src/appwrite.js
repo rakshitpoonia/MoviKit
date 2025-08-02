@@ -10,43 +10,42 @@ const client = new Client()
 
 const database = new Databases(client);
 
-export const updateSearchCount = async (searchTerm, movie) => {
-  // 1. Use Appwrite SDK to check if the search term exists in the database
+export const updateClickCount = async (movie) => {
+
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.equal("searchTerm", searchTerm), // matching searchTerm in database with what user is searching for
+      Query.equal("movie_id", movie.id),
     ]);
-
-    // 2. If it does, update the count
+    // if movie exists, update count
     if (result.documents.length > 0) {
       const doc = result.documents[0];
-
       await database.updateDocument(DATABASE_ID, COLLECTION_ID, doc.$id, {
         count: doc.count + 1,
       });
-      // 3. If it doesn't, create a new document with the search term and count as 1
+      // if movie does not exist, create new document
     } else {
-      await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
-        searchTerm,
+      const newDoc = await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
+        searchTerm: movie.title,
         count: 1,
         movie_id: movie.id,
         poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error updating click count:", error); // This will show us the exact error
   }
 };
 
 export const getTrendingMovies = async () => {
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.limit(5), // 5 movies
+      Query.limit(10), // Load 10 trending movies
       Query.orderDesc("count"),
     ]);
 
-    return result.documents;
+    return result.documents || [];
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching trending movies:", error);
+    return [];
   }
 };

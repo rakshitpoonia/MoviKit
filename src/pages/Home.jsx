@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Search from "../components/Search";
 import Spinner from "../components/Spinner";
 import MovieCard from "../components/MovieCard";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useDebounce } from "react-use";
-import { updateSearchCount, getTrendingMovies } from "../appwrite";
+import { getTrendingMovies } from "../appwrite";
 import { useModalContext } from "../contexts/ModalContext";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -28,6 +28,8 @@ const Home = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [isTrendingLoading, setIsTrendingLoading] = useState(true);
+  const [currentTrendingIndex, setCurrentTrendingIndex] = useState(0);
+  const trendingListRef = useRef(null);
   const { openModal } = useModalContext();
 
   // Debounce the search term to prevent making too many API requests
@@ -61,9 +63,6 @@ const Home = () => {
       const data = await response.json();
       setMovieList(data.results || []);
 
-      if (query && data.results.length > 0) {
-        await updateSearchCount(query, data.results[0]);
-      }
     } catch (error) {
       console.error(`Error fetching Movies: ${error}`);
       setErrorMessage("Error Fetching Movies! Please Try Again Later");
@@ -76,20 +75,45 @@ const Home = () => {
     setIsTrendingLoading(true);
     try {
       const movies = await getTrendingMovies();
-      setTrendingMovies(movies);
+      setTrendingMovies(movies || []);
     } catch (error) {
       console.error(`Error fetching trending movies: ${error}`);
+      setTrendingMovies([]);
     } finally {
       setIsTrendingLoading(false);
     }
   };
 
-  const handleMovieClick = (movieId) => {
-    openModal(movieId);
+  const handleTrendingNavigation = (direction) => {
+    const maxIndex = Math.max(0, trendingMovies.length - 5);
+    const newIndex = direction === 'next' 
+      ? Math.min(currentTrendingIndex + 5, maxIndex)
+      : Math.max(0, currentTrendingIndex - 5);
+    
+    setCurrentTrendingIndex(newIndex);
+    
+    // Smooth scroll to the new position
+    if (trendingListRef.current) {
+      const scrollAmount = direction === 'next' ? 1200 : -1200; 
+      trendingListRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   };
 
-  const handleTrendingMovieClick = (movie) => {
-    openModal(movie.movie_id);
+  const handleMovieClick = (movie) => { 
+    openModal(movie.id, movie); // Pass both ID and movie data
+  };
+
+  const handleTrendingMovieClick = (trendingMovie) => {
+    // For trending movies, we need to construct movie object
+    const movieData = {
+      id: trendingMovie.movie_id,
+      title: trendingMovie.searchTerm, 
+      poster_path: trendingMovie.poster_url.replace('https://image.tmdb.org/t/p/w500', '')
+    };
+    openModal(trendingMovie.movie_id, movieData);
   };
 
   useEffect(() => {
@@ -120,6 +144,10 @@ const Home = () => {
     }
   };
 
+  // Get the current 5 movies to display
+  const currentTrendingMovies = trendingMovies.slice(currentTrendingIndex, currentTrendingIndex + 5);
+  const hasMoreTrending = trendingMovies.length > 5 && currentTrendingIndex + 5 < trendingMovies.length;
+
   return (
     <>
       <div className="pattern" />
@@ -141,16 +169,54 @@ const Home = () => {
         {/* Trending Section*/}
         {!isSearchMode && (
           <section className="trending">
-            <h2 className="mt-6 text-4xl text-gradient">Trending Movies</h2>
+            <div className="trending-header">
+              <h2 className="mt-6 text-4xl text-gradient">Trending Movies</h2>
+              <div className="trending-navigation">
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleTrendingNavigation('prev');
+                  }}
+                  disabled={currentTrendingIndex === 0}
+                  className="nav-btn prev-btn"
+                  type="button"
+                  style={{
+                    minWidth: '40px',
+                    minHeight: '40px',
+                    touchAction: 'manipulation'
+                  }}
+                >
+                  &lt;
+                </button>
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleTrendingNavigation('next');
+                  }}
+                  disabled={!hasMoreTrending}
+                  className="nav-btn next-btn"
+                  type="button"
+                  style={{
+                    minWidth: '40px',
+                    minHeight: '40px',
+                    touchAction: 'manipulation'
+                  }}
+                >
+                  &gt;
+                </button>
+              </div>
+            </div>
             {isTrendingLoading ? (
               <div className="flex justify-center">
                 <Spinner />
               </div>
-            ) : trendingMovies.length > 0 ? (
-              <ul>
-                {trendingMovies.map((movie, index) => (
+            ) : currentTrendingMovies.length > 0 ? (
+              <ul ref={trendingListRef}>
+                {currentTrendingMovies.map((movie, index) => (
                   <li key={movie.$id}>
-                    <p>{index + 1}</p>
+                    <p>{currentTrendingIndex + index + 1}</p>
                     <img 
                       src={movie.poster_url} 
                       alt={movie.title}
@@ -183,7 +249,7 @@ const Home = () => {
                   key={movie.id} 
                   movie={movie} 
                   genres={genres}
-                  onClick={() => handleMovieClick(movie.id)}
+                  onClick={() => handleMovieClick(movie)}
                 />
               ))}
             </ul>

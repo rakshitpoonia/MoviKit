@@ -35,8 +35,8 @@ const Favorites = () => {
     }
   };
 
-  const handleMovieClick = (movieId) => {
-    openModal(movieId);
+  const handleMovieClick = (movie) => { 
+    openModal(movie.id, movie); // Pass both ID and movie data
   };
 
   const handleHomeClick = () => {
@@ -83,7 +83,7 @@ const Favorites = () => {
                       key={movie.id} 
                       movie={movie} 
                       genres={genres}
-                      onClick={() => handleMovieClick(movie.id)}
+                      onClick={() => handleMovieClick(movie)}
                     />
                   ))}
                 </ul>

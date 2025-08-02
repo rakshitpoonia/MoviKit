@@ -45,7 +45,6 @@ const Footer = () => {
             </a>
           </div>
           
-          {/* Trademark */}
           <p className="text-white text-lg xs:text-2xl text-center font-bold">
             Connect With Me !
           </p>
