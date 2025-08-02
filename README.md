@@ -5,6 +5,9 @@ A modern, feature-rich movie discovery application built with React and powered 
 
 ---
 
+##  🚀 [Live Demo] https://movikit.vercel.app/
+
+
 ## ✨ Features
 
 ### 🔍 Movie Discovery & Browsing
