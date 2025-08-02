@@ -2,7 +2,6 @@
 
 A modern, feature-rich movie discovery application built with React and powered by the TMDB API. Discover trending movies, search through thousands of films, and build your personal favorites collection.
 
-![MoviKit Banner](public/hero.png)
 
 ---
 
